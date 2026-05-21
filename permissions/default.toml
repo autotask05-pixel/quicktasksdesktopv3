@@ -1,0 +1,11 @@
+[default]
+description = "Enables the QuickTasks desktop UI commands."
+permissions = [
+  "allow-init-status",
+  "allow-query",
+  "allow-load-agent",
+  "allow-reload-models",
+  "allow-logs",
+  "allow-upload-model-file",
+  "allow-use-model-file-path",
+]

@@ -1,0 +1,49 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "QuickTasks",
+  "version": "0.1.0",
+  "identifier": "com.quicktasks.desktop",
+
+  "build": {
+    "frontendDist": "static"
+  },
+
+  "app": {
+    "withGlobalTauri": true,
+
+    "windows": [
+      {
+        "title": "QuickTasks",
+        "width": 1120,
+        "height": 760,
+        "minWidth": 860,
+        "minHeight": 560
+      }
+    ],
+
+    "security": {
+      "csp": null
+    }
+  },
+
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "publisher": "QuickTasks",
+    "shortDescription": "QuickTasks desktop app",
+    "longDescription": "QuickTasks desktop app with local routing and entity recognition models.",
+    "resources": [
+      "models"
+    ],
+
+    "icon": [
+      "icons/icon.ico",
+      "icons/icon.icns",
+      "icons/icon.png",
+      "icons/32x32.png",
+      "icons/64x64.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png"
+    ]
+  }
+}

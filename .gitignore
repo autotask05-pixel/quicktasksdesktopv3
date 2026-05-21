@@ -1,0 +1,5 @@
+# Ignore build artifacts
+target/
+
+# Ignore the entire models directory
+src/models/

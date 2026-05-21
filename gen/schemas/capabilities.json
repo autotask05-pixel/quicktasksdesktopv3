@@ -1,0 +1,1 @@
+{"default":{"identifier":"default","description":"Allows the main QuickTasks window to use the Tauri IPC commands required by the desktop UI.","local":true,"windows":["main"],"permissions":["core:default","dialog:allow-open","default"]}}

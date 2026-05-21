@@ -1,0 +1,34 @@
+[[permission]]
+identifier = "allow-init-status"
+description = "Enables the init_status command."
+commands.allow = ["init_status"]
+
+[[permission]]
+identifier = "allow-query"
+description = "Enables the query command."
+commands.allow = ["query"]
+
+[[permission]]
+identifier = "allow-load-agent"
+description = "Enables the load_agent command."
+commands.allow = ["load_agent"]
+
+[[permission]]
+identifier = "allow-reload-models"
+description = "Enables the reload_models command."
+commands.allow = ["reload_models"]
+
+[[permission]]
+identifier = "allow-logs"
+description = "Enables the logs command."
+commands.allow = ["logs"]
+
+[[permission]]
+identifier = "allow-upload-model-file"
+description = "Enables the upload_model_file command."
+commands.allow = ["upload_model_file"]
+
+[[permission]]
+identifier = "allow-use-model-file-path"
+description = "Enables the use_model_file_path command."
+commands.allow = ["use_model_file_path"]

@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QuickTasks</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="workspace">
+        <header class="topbar">
+          <div>
+            <h1>QuickTasks</h1>
+            <p id="statusText">Checking local engine...</p>
+          </div>
+          <div class="topbar-actions">
+            <label class="file-action">
+              Load agent JSON
+              <input id="agentInput" type="file" accept="application/json,.json" />
+            </label>
+          </div>
+        </header>
+
+        <section id="statusPanel" class="status-panel" hidden></section>
+
+        <section class="asset-panel">
+          <div class="panel-heading">
+            <h2>Model Assets</h2>
+            <button id="reloadModelsButton" type="button">Reload current files</button>
+          </div>
+          <div class="asset-grid">
+            <div class="asset-action">
+              <span>Crossencoder ONNX</span>
+              <small>models/crossencoder/model.onnx</small>
+              <div class="asset-path-control">
+                <input data-model-path-target="gte_model" type="text" placeholder="No file selected" readonly />
+                <button data-model-select-target="gte_model" type="button">Select</button>
+              </div>
+            </div>
+            <div class="asset-action">
+              <span>Crossencoder Tokenizer</span>
+              <small>models/crossencoder/tokenizer.json</small>
+              <div class="asset-path-control">
+                <input data-model-path-target="gte_tokenizer" type="text" placeholder="No file selected" readonly />
+                <button data-model-select-target="gte_tokenizer" type="button">Select</button>
+              </div>
+            </div>
+            <div class="asset-action">
+              <span>NER ONNX</span>
+              <small>models/ner/model.onnx</small>
+              <div class="asset-path-control">
+                <input data-model-path-target="gliner_model" type="text" placeholder="No file selected" readonly />
+                <button data-model-select-target="gliner_model" type="button">Select</button>
+              </div>
+            </div>
+            <div class="asset-action">
+              <span>NER Tokenizer</span>
+              <small>models/ner/tokenizer.json</small>
+              <div class="asset-path-control">
+                <input data-model-path-target="gliner_tokenizer" type="text" placeholder="No file selected" readonly />
+                <button data-model-select-target="gliner_tokenizer" type="button">Select</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="query-panel">
+          <div class="query-row">
+            <textarea id="queryInput" rows="3" placeholder="Ask for a task..."></textarea>
+            <button id="runButton" type="button">Run</button>
+          </div>
+        </section>
+
+        <section class="result-layout">
+          <article class="output-panel">
+            <div class="panel-heading">
+              <h2>Result</h2>
+              <button id="clearButton" type="button">Clear</button>
+            </div>
+            <pre id="resultOutput"></pre>
+          </article>
+
+          <aside class="side-panel">
+            <div class="panel-heading">
+              <h2>Logs</h2>
+            </div>
+            <pre id="logOutput"></pre>
+          </aside>
+        </section>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
