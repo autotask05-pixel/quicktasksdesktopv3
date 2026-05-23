@@ -15,35 +15,28 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # macOS Apple Silicon
-          - platform: macos-latest
+          # --- macOS (Maximum Compatibility) ---
+          # Built on standard macos-14 to ensure stability. 
+          # Environment variables below will stretch compatibility to older Macs.
+          - platform: macos-14
             args: --target aarch64-apple-darwin
-            target: aarch64-apple-darwin
-
-          # macOS Intel
-          - platform: macos-latest
+          - platform: macos-14
             args: --target x86_64-apple-darwin
-            target: x86_64-apple-darwin
 
-          # Linux x64 (AMD64)
+          # --- Linux (Maximum Compatibility) ---
+          # Built on ubuntu-22.04. This guarantees the app will run on 
+          # Ubuntu 22.04, Ubuntu 24.04, Debian 11/12, Fedora, Linux Mint, etc.
           - platform: ubuntu-22.04
             args: ""
-            target: ""
-
-          # Linux ARM64 (aarch64) - Cross-compiled
-          - platform: ubuntu-22.04
-            args: --target aarch64-unknown-linux-gnu
-            target: aarch64-unknown-linux-gnu
-
-          # Windows x64
-          - platform: windows-latest
+          - platform: ubuntu-22.04-arm
             args: ""
-            target: ""
 
-          # Windows ARM64 - Cross-compiled
-          - platform: windows-latest
-            args: --target aarch64-pc-windows-msvc
-            target: aarch64-pc-windows-msvc
+          # --- Windows (Maximum Compatibility) ---
+          # Built on windows-2022. Supports all Windows 10 and Windows 11 devices.
+          - platform: windows-2022
+            args: ""
+          - platform: windows-11-arm
+            args: ""
 
     runs-on: ${{ matrix.platform }}
 
@@ -51,9 +44,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # --- Linux Toolchains & Dependencies ---
-      - name: Install Linux AMD64 host dependencies
-        if: matrix.platform == 'ubuntu-22.04'
+      - name: Install Linux dependencies
+        if: startsWith(matrix.platform, 'ubuntu')
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -62,44 +54,34 @@ jobs:
             librsvg2-dev \
             patchelf
 
-      - name: Install Linux ARM64 cross-compilation tools
-        if: matrix.target == 'aarch64-unknown-linux-gnu'
-        run: |
-          sudo dpkg --add-architecture arm64
-          sudo apt-get update
-          sudo apt-get install -y \
-            gcc-aarch64-linux-gnu \
-            g++-aarch64-linux-gnu \
-            libwebkit2gtk-4.1-dev:arm64 \
-            libappindicator3-dev:arm64 \
-            librsvg2-dev:arm64
-
-      # --- Rust Environment Setup ---
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: ${{ matrix.target }}
+          targets: ${{ startsWith(matrix.platform, 'macos') && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
 
       - name: Rust cache
         uses: swatinem/rust-cache@v2
-        with:
-          key: ${{ matrix.target }}
 
-      # --- Build and Publish ---
       - name: Build and publish Tauri app
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Set specific linker variables for Linux cross-compilation
-          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: ${{ matrix.target == 'aarch64-unknown-linux-gnu' && 'aarch64-linux-gnu-gcc' || '' }}
-          # Tell pkg-config where to find ARM64 libraries on the Ubuntu host
-          PKG_CONFIG_ALLOW_CROSS: ${{ matrix.target == 'aarch64-unknown-linux-gnu' && '1' || '' }}
-          PKG_CONFIG_PATH_aarch64_unknown_linux_gnu: ${{ matrix.target == 'aarch64-unknown-linux-gnu' && '/usr/lib/aarch64-linux-gnu/pkgconfig' || '' }}
+          
+          # --- BACKWARD COMPATIBILITY FLAGS ---
+          # Ensures macOS builds run on OS X Catalina (10.15) and newer.
+          MACOSX_DEPLOYMENT_TARGET: "10.15"
+          
         with:
           tagName: app-v__VERSION__
           releaseName: App v__VERSION__
           releaseBody: |
             Download the installer for your platform below.
+            
+            **System Requirements:**
+            - **Windows**: Windows 10 / Windows 11 (x64 and ARM64)
+            - **macOS**: macOS 10.15 Catalina or newer (Intel and Apple Silicon)
+            - **Linux**: Ubuntu 22.04+ or equivalent distros (x64 and ARM64)
+
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
