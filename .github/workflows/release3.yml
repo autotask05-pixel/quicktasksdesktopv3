@@ -34,7 +34,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          # Added in case you have private submodules causing the git auth error
           submodules: recursive
 
       - name: Install Linux dependencies
@@ -55,10 +54,25 @@ jobs:
       - name: Rust cache
         uses: swatinem/rust-cache@v2
         with:
-          # FIX FOR WINDOWS ARM64: 
-          # Forces the cache to be strictly isolated per platform and architecture
-          # so x64 C-libraries never bleed into ARM64 builds.
           shared-key: "${{ matrix.platform }}-${{ matrix.args }}"
+
+      # --- FIX FOR WINDOWS ARM64 ORT CRATE BUG ---
+      # Downloads the official Microsoft ARM64 release and bypasses the broken Pyke.io CDN package
+      - name: Workaround ORT Windows ARM64 Bug
+        if: matrix.platform == 'windows-11-arm'
+        shell: pwsh
+        run: |
+          $ORT_VERSION = "1.17.1"
+          Invoke-WebRequest -Uri "https://github.com/microsoft/onnxruntime/releases/download/v$ORT_VERSION/onnxruntime-win-arm64-$ORT_VERSION.zip" -OutFile "onnxruntime.zip"
+          Expand-Archive -Path "onnxruntime.zip" -DestinationPath "C:\onnxruntime"
+          
+          # Force the ort crate to use this local, correct ARM64 library
+          "ORT_STRATEGY=system" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "ORT_LIB_LOCATION=C:\onnxruntime\onnxruntime-win-arm64-$ORT_VERSION\lib" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          
+          # Pre-emptively copy the DLL to the build output so Tauri successfully bundles it
+          New-Item -ItemType Directory -Force -Path "target\release"
+          Copy-Item "C:\onnxruntime\onnxruntime-win-arm64-$ORT_VERSION\lib\onnxruntime.dll" -Destination "target\release\"
 
       - name: Build and publish Tauri app
         uses: tauri-apps/tauri-action@v0
