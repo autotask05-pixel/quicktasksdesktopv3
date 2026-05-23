@@ -15,24 +15,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # --- macOS (Maximum Compatibility) ---
-          # Built on standard macos-14 to ensure stability. 
-          # Environment variables below will stretch compatibility to older Macs.
           - platform: macos-14
             args: --target aarch64-apple-darwin
           - platform: macos-14
             args: --target x86_64-apple-darwin
-
-          # --- Linux (Maximum Compatibility) ---
-          # Built on ubuntu-22.04. This guarantees the app will run on 
-          # Ubuntu 22.04, Ubuntu 24.04, Debian 11/12, Fedora, Linux Mint, etc.
           - platform: ubuntu-22.04
             args: ""
           - platform: ubuntu-22.04-arm
             args: ""
-
-          # --- Windows (Maximum Compatibility) ---
-          # Built on windows-2022. Supports all Windows 10 and Windows 11 devices.
           - platform: windows-2022
             args: ""
           - platform: windows-11-arm
@@ -43,6 +33,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          # Added in case you have private submodules causing the git auth error
+          submodules: recursive
 
       - name: Install Linux dependencies
         if: startsWith(matrix.platform, 'ubuntu')
@@ -61,27 +54,22 @@ jobs:
 
       - name: Rust cache
         uses: swatinem/rust-cache@v2
+        with:
+          # FIX FOR WINDOWS ARM64: 
+          # Forces the cache to be strictly isolated per platform and architecture
+          # so x64 C-libraries never bleed into ARM64 builds.
+          shared-key: "${{ matrix.platform }}-${{ matrix.args }}"
 
       - name: Build and publish Tauri app
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
-          # --- BACKWARD COMPATIBILITY FLAGS ---
-          # Ensures macOS builds run on OS X Catalina (10.15) and newer.
           MACOSX_DEPLOYMENT_TARGET: "10.15"
-          
         with:
           tagName: app-v__VERSION__
           releaseName: App v__VERSION__
           releaseBody: |
             Download the installer for your platform below.
-            
-            **System Requirements:**
-            - **Windows**: Windows 10 / Windows 11 (x64 and ARM64)
-            - **macOS**: macOS 10.15 Catalina or newer (Intel and Apple Silicon)
-            - **Linux**: Ubuntu 22.04+ or equivalent distros (x64 and ARM64)
-
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
