@@ -1,6 +1,7 @@
 # QuickTasks Desktop
 
 Tauri desktop app for loading a QuickTasks agent JSON and running local model-backed routing.
+https://qiktax.n8271435.workers.dev/
 
 ## Development
 
