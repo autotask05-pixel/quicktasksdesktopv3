@@ -283,29 +283,6 @@ Releases can be triggered manually or by pushing to the `release` branch.
 
 ---
 
-## Windows ARM64 ONNX Runtime
-
-The Windows ARM64 workflow includes a dedicated ONNX Runtime setup.
-
-```mermaid
-flowchart LR
-    A["Windows ARM64"] --> B["Download ORT"]
-    B --> C["Configure Local ORT"]
-    C --> D["Build Tauri"]
-    D --> E["ARM64 Release"]
-
-    classDef entry fill:#111827,color:#ffffff,stroke:#374151,stroke-width:2px
-    classDef system fill:#eff6ff,color:#1e3a8a,stroke:#3b82f6,stroke-width:1.5px
-    classDef output fill:#ecfdf5,color:#065f46,stroke:#10b981,stroke-width:2px
-
-    class A entry
-    class B,C,D system
-    class E output
-```
-
-The workflow downloads the official Windows ARM64 ONNX Runtime release, configures the Rust `ort` build to use the local library, and makes the runtime DLL available for bundling.
-
----
 
 ## Technology
 
@@ -374,4 +351,19 @@ Builds native installers across multiple operating systems and CPU architectures
 **Project:** QuickTasks Desktop
 
 **Web:** https://qiktax.n8271435.workers.dev/
+
+**Sample_json:** [simple_database_manager.json](https://github.com/user-attachments/files/32622382/simple_database_manager.json)
+
+
+## Limitations
+Gliner accuracy for parameter detection is not fully reliable for all types of parameters .
+The process for creation of the agent.json is not fully automated requires manual creation of group/function trees .
+
+
+
+## Related projects 
+https://github.com/autotask05-pixel/openapiai-cloud (open-api compatible ai assistant)
+
+
+
 
