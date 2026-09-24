@@ -52,8 +52,8 @@ Instead of searching a flat list of functions, QuickTasks navigates a hierarchy 
 ```mermaid
 flowchart TD
     Q["User Query"] --> R["Router"]
-    R --> G["Group"]
-    G --> A["Agent"]
+    R --> G["Agent/Group"]
+    G --> A["Agent/Group/function"]
     A --> F["Function"]
 
     G -. "rank children" .-> A
@@ -133,26 +133,7 @@ The execution layer supports both HTTP requests and local commands, with paramet
 
 ---
 
-## Desktop Runtime
 
-The native desktop application is built with **Tauri + Rust**.
-
-```mermaid
-flowchart LR
-    A["QuickTasks"] --> B["Environment"]
-    B --> C["Runtime Paths"]
-    C --> D["Tauri"]
-    D --> E["Commands"]
-    E --> F["Desktop UI"]
-
-    classDef entry fill:#111827,color:#ffffff,stroke:#374151,stroke-width:2px
-    classDef system fill:#eff6ff,color:#1e3a8a,stroke:#3b82f6,stroke-width:1.5px
-    classDef output fill:#ecfdf5,color:#065f46,stroke:#10b981,stroke-width:2px
-
-    class A entry
-    class B,C,D,E system
-    class F output
-```
 
 The desktop layer initializes the environment, configures runtime paths, starts Tauri, and exposes native commands for the frontend.
 
@@ -168,31 +149,7 @@ upload_model_file
 use_model_file_path
 ```
 
----
 
-## Local AI Inference
-
-QuickTasks can keep the routing models local and load them through ONNX Runtime.
-
-```mermaid
-flowchart LR
-    M["Local / Bundled Models"] --> O["ONNX Runtime"]
-    O --> I["Model Inference"]
-    I --> R["Routing Decision"]
-    R --> F["Function"]
-
-    classDef entry fill:#111827,color:#ffffff,stroke:#374151,stroke-width:2px
-    classDef ai fill:#ede9fe,color:#4c1d95,stroke:#7c3aed,stroke-width:2px
-    classDef output fill:#ecfdf5,color:#065f46,stroke:#10b981,stroke-width:2px
-
-    class M entry
-    class O,I,R ai
-    class F output
-```
-
-This architecture allows the desktop application to work with locally available model assets instead of requiring routing inference to be performed remotely.
-
----
 
 ## Bundled Models
 
@@ -410,15 +367,6 @@ Supports bundled models, downloaded models, configured model directories, and di
 
 Builds native installers across multiple operating systems and CPU architectures using GitHub Actions.
 
----
-
-## Resume Project Entry
-
-**QuickTasks Desktop — Rust, Tauri, ONNX Runtime, GTE, GLiNER**
-
-Built a cross-platform Rust/Tauri AI desktop application for local model-backed semantic routing over hierarchical agent and function trees. Implemented GTE cross-encoder ranking for candidate selection, native HTTP and command execution, configurable local ONNX model management, and automated multi-platform Tauri releases across macOS, Linux, and Windows architectures.
-
----
 
 ## Repository
 <img width="1909" height="1027" alt="Screenshot from 2026-09-19 03-16-55" src="https://github.com/user-attachments/assets/fe577def-40f8-464a-bff1-eefa073428b8" />
@@ -426,3 +374,4 @@ Built a cross-platform Rust/Tauri AI desktop application for local model-backed 
 **Project:** QuickTasks Desktop
 
 **Web:** https://qiktax.n8271435.workers.dev/
+
