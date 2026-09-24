@@ -421,6 +421,7 @@ Built a cross-platform Rust/Tauri AI desktop application for local model-backed 
 ---
 
 ## Repository
+<img width="1909" height="1027" alt="Screenshot from 2026-09-19 03-16-55" src="https://github.com/user-attachments/assets/fe577def-40f8-464a-bff1-eefa073428b8" />
 
 **Project:** QuickTasks Desktop
 
