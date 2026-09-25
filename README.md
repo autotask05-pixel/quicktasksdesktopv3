@@ -356,7 +356,7 @@ Builds native installers across multiple operating systems and CPU architectures
 
 
 ## Limitations
-Gliner accuracy for parameter detection is not fully reliable for all types of parameters .    The process for creation of the agent.json is not fully automated requires manual creation of group/function trees . 
+Gliner accuracy for parameter detection is not fully reliable for all types of parameters . <br>   The process for creation of the agent.json is not fully automated requires manual creation of group/function trees . 
 
 
 
